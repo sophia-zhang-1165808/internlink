@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Internships Overview</title>
+</head>
+<body>
+    <h2>Internships and Application Counts</h2>
+    <table border="1" cellpadding="8" cellspacing="0">
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Number of Applications</th>
+        </tr>
+        {% for internship in internships %}
+        <tr>
+            <td>{{ internship.title }}</td>
+            <td>{{ internship.description }}</td>
+            <td>{{ internship.application_count }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

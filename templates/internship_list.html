@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Internship Listings</title>
+</head>
+<body>
+  <h2>Available Internships</h2>
+  <ul id="internshipList"></ul>
+
+  <script>
+    // Fetch and display internships
+    fetch('/api/internships')
+      .then(response => response.json())
+      .then(data => {
+        const list = document.getElementById('internshipList');
+        data.internships.forEach(internship => {
+          const item = document.createElement('li');
+          item.innerHTML = `
+            <strong>${internship.title}</strong><br>
+            ${internship.description}<br>
+            Employer ID: ${internship.employer_id}<br>
+            <button onclick="apply(${internship.id})">Apply</button><br><br>
+          `;
+          list.appendChild(item);
+        });
+      })
+      .catch(error => console.error('Error fetching internships:', error));
+
+    // Function to apply for an internship
+    function apply(internshipId) {
+      fetch('/api/apply', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include',
+        body: JSON.stringify({ internship_id: internshipId })
+      })
+      .then(res => res.json())
+      .then(data => alert(data.message))
+      .catch(err => alert("Error applying: " + err));
+    }
+  </script>
+</body>
+</html>

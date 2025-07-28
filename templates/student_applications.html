@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Applications</title>
+</head>
+<body>
+    <h2>My Applications</h2>
+    {% if applications %}
+        <ul>
+            {% for app in applications %}
+                <li>
+                    <strong>{{ app.title }}</strong><br>
+                    {{ app.description }}<br>
+                    Employer: {{ app.employer_name }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>You have not applied for any internships yet.</p>
+    {% endif %}
+</body>
+</html>

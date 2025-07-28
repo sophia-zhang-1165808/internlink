@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Applications for Your Internships</title>
+</head>
+<body>
+    <h1>Applications for Your Internships</h1>
+
+    {% if applications %}
+    <table border="1" cellpadding="8" cellspacing="0">
+        <tr>
+            <th>Application ID</th>
+            <th>Student Name</th>
+            <th>Student Email</th>
+            <th>Internship Title</th>
+            <th>Description</th>
+        </tr>
+        {% for app in applications %}
+        <tr>
+            <td>{{ app.application_id }}</td>
+            <td>{{ app.student_name }}</td>
+            <td>{{ app.student_email }}</td>
+            <td>{{ app.internship_title }}</td>
+            <td>{{ app.description }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <p>No applications found.</p>
+    {% endif %}
+</body>
+</html>

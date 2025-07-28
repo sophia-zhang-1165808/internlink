@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Internship Listings</title>
+</head>
+<body>
+    <h2>Available Internships</h2>
+    {% if internships %}
+        <ul>
+            {% for internship in internships %}
+                <li>
+                    <strong>{{ internship['title'] }}</strong><br>
+                    {{ internship['description'] }}<br>
+                    Location: {{ internship['location'] }}<br>
+                    Duration: {{ internship['duration'] }}
+                </li>
+                <hr>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No internships available at the moment.</p>
+    {% endif %}
+</body>
+</html>
