@@ -1,45 +1,72 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>Internship Listings</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
-<body>
-  <h2>Available Internships</h2>
-  <ul id="internshipList"></ul>
+<body class="bg-light">
+  <div class="container mt-5">
+    <h2 class="mb-4">📋 Available Internships</h2>
+
+    <div id="message-area"></div>
+
+    {% if internships %}
+      <div class="row">
+        {% for internship in internships %}
+          <div class="col-md-6 mb-4">
+            <div class="card shadow-sm">
+              <div class="card-body">
+                <h5 class="card-title">{{ internship.title }}</h5>
+                <h6 class="card-subtitle text-muted mb-2">Offered by: {{ internship.employer_name }}</h6>
+                <p class="card-text">{{ internship.description }}</p>
+                <button 
+                  class="btn btn-primary btn-sm apply-btn"
+                  data-id="{{ internship.id }}"
+                >
+                  Apply Now
+                </button>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p>No internships available at the moment.</p>
+    {% endif %}
+  </div>
 
   <script>
-    // Fetch and display internships
-    fetch('/api/internships')
-      .then(response => response.json())
-      .then(data => {
-        const list = document.getElementById('internshipList');
-        data.internships.forEach(internship => {
-          const item = document.createElement('li');
-          item.innerHTML = `
-            <strong>${internship.title}</strong><br>
-            ${internship.description}<br>
-            Employer ID: ${internship.employer_id}<br>
-            <button onclick="apply(${internship.id})">Apply</button><br><br>
-          `;
-          list.appendChild(item);
-        });
-      })
-      .catch(error => console.error('Error fetching internships:', error));
+    document.addEventListener("DOMContentLoaded", () => {
+      const buttons = document.querySelectorAll(".apply-btn");
+      const messageArea = document.getElementById("message-area");
 
-    // Function to apply for an internship
-    function apply(internshipId) {
-      fetch('/api/apply', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        credentials: 'include',
-        body: JSON.stringify({ internship_id: internshipId })
-      })
-      .then(res => res.json())
-      .then(data => alert(data.message))
-      .catch(err => alert("Error applying: " + err));
-    }
+      buttons.forEach(button => {
+        button.addEventListener("click", () => {
+          const internshipId = button.dataset.id;
+
+          fetch("/api/apply", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ internship_id: internshipId })
+          })
+          .then(response => response.json().then(data => ({ status: response.status, body: data })))
+          .then(result => {
+            messageArea.innerHTML = `
+              <div class="alert ${result.status === 201 || result.status === 200 ? 'alert-success' : 'alert-danger'}">
+                ${result.body.message}
+              </div>
+            `;
+          })
+          .catch(error => {
+            console.error("Error:", error);
+            messageArea.innerHTML = `<div class="alert alert-danger">Something went wrong.</div>`;
+          });
+        });
+      });
+    });
   </script>
 </body>
 </html>
